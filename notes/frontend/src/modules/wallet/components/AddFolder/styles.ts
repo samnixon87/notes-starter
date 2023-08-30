@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import { animated } from 'react-spring'
 
-export const FolderStyle = styled.div`
+export const FolderStyle = styled(animated.div)`
   background: white;
   width: 100%;
   color: black;
