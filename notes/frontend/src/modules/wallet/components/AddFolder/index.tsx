@@ -2,12 +2,15 @@ import { FolderStyle, Title, Input, Form, Button } from "./styles";
 import { useState } from "react";
 import { Formik, FormikHelpers } from "formik";
 import { useSpring } from "react-spring";
+import { useApi} from '../../hooks/useApi'
 
 interface IProps {
-  setFolderIsAdded: React.Dispatch<React.SetStateAction<boolean>>;
+  setFolderIsAdded: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const AddFolder: React.FC<IProps> = ({ setFolderIsAdded }) => {
+const AddFolder:React.FC<IProps> = ({setFolderIsAdded}) => {
+
+  const { createFolder } = useApi();
   const [openAddFolder, setOpenAddFolder] = useState(false);
 
   const addFolderProps = useSpring({
@@ -25,11 +28,11 @@ const AddFolder: React.FC<IProps> = ({ setFolderIsAdded }) => {
     values: FormValues,
     { setSubmitting, resetForm }: FormikHelpers<FormValues>
   ) => {
-    setTimeout(() => {
+    setTimeout(async() => {
+      handleToggle();
+      await createFolder( {name: values.title})
       setSubmitting(false);
       setFolderIsAdded(true)
-      handleToggle();
-      localStorage.setItem(values.title, JSON.stringify([]));
       resetForm();
     }, 400);
   };

@@ -4,35 +4,35 @@ import { useState, useRef, useEffect } from "react";
 import { FolderStyle, Title, Container } from "./styles";
 import { useSpring } from "react-spring";
 import { INote } from "../../interfaces";
+import { useApi } from "../../hooks/useApi";
 
 interface IProps {
   title: string;
+  id: string;
 }
 
-const Folder: React.FC<IProps> = ({ title }) => {
+const Folder: React.FC<IProps> = ({ title, id }) => {
+  const { notes, fetchNotes } = useApi();
+
   const [openFolder, setOpenFolder] = useState(false);
   const [openNote, setOpenNote] = useState(false);
   const [folderHeight, setFolderHeight] = useState(50);
   const [noteHeight, setNoteHeight] = useState(100);
   const [openAddNote, setOpenAddNote] = useState(false);
-  const [notes, setNotes] = useState<INote[]>([]);
+
   const [noteIsAdded, setNoteIsAdded] = useState(false);
 
   const folderRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const storedNotes = localStorage.getItem(title);
-    if (storedNotes !== null && storedNotes !== "") {
-      const noteList = JSON.parse(storedNotes);
-      if (notes === null || noteList.length > notes.length) {
-        setNotes(noteList);
-      }
+    if (id) {
+      fetchNotes(id)
     }
-  }, [title, noteIsAdded, notes]);
+  }, [noteIsAdded]);
 
   useEffect(() => {
-    setFolderHeight(openFolder ? folderRef.current!.scrollHeight + 150 : 75);
-  }, [openFolder, openNote, openAddNote]);
+    setFolderHeight(openFolder ? folderRef.current!.scrollHeight + 50 : 75);
+  }, [openFolder, openNote, openAddNote, notes]);
 
   const handleToggle = () => {
     setOpenFolder(!openFolder);
@@ -58,11 +58,11 @@ const Folder: React.FC<IProps> = ({ title }) => {
           <AddNote
             openAddNote={openAddNote}
             setOpenAddNote={setOpenAddNote}
-            folder={title}
+            folder={id}
             setNoteIsAdded={setNoteIsAdded}
           />
           {notes &&
-            Object.values(notes).map((note: any, key: number) => (
+            notes.map((note: any, key: number) => (
               <Note
                 key={key}
                 folder={title}
@@ -70,8 +70,8 @@ const Folder: React.FC<IProps> = ({ title }) => {
                 setOpenNote={setOpenNote}
                 noteHeight={noteHeight}
                 setNoteHeight={setNoteHeight}
-                noteTitle={note[0]}
-                noteBody={note[1]}
+                noteTitle={note.title}
+                noteBody={note.content}
               />
             ))}
         </Container>

@@ -7,7 +7,7 @@ interface IProps {
   setOpenNote: React.Dispatch<React.SetStateAction<boolean>>;
   noteHeight: number;
   setNoteHeight: React.Dispatch<React.SetStateAction<number>>;
-  noteTitle: string
+  noteTitle: string;
   noteBody: string
 }
 
@@ -16,13 +16,17 @@ const Note: React.FC<IProps> = ({ openNote, setOpenNote, setNoteHeight, noteTitl
 
   useEffect(() => {
     setNoteHeight(
-      noteRef.current ? (openNote ? noteRef.current.scrollHeight : 100) : 100
+      noteRef.current ? (openNote ? noteRef.current.scrollHeight + 50 : 100) : 100
     );
   }, [openNote, setNoteHeight]);
 
+  const handleToggle = () => {
+    setOpenNote(!openNote);
+  };
+
   return (
     <>
-      <Card data-testid="note" ref={noteRef}>
+      <Card data-testid="note" ref={noteRef} onClick={handleToggle}>
         <Header>
           <Title>{folder}</Title>
         </Header>

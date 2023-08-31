@@ -1,28 +1,24 @@
 import { FolderContainer } from "./styles";
 import Folder from "../Folder";
 import AddFolder from "../AddFolder";
-import { useState, useEffect } from "react";
 import { IFolder } from "../../interfaces";
+import { useState, useEffect } from "react";
+import { useApi} from '../../hooks/useApi'
 
 const Wallet: React.FC = () => {
-  const [folders, setFolders] = useState<IFolder[]>([]);
-  const [folderIsAdded, setFolderIsAdded] = useState(false)
+
+  const { folders, fetchFolders } = useApi()
+  const [folderIsAdded, setFolderIsAdded] = useState(false);
 
   useEffect(() => {
-    const folderList: string[] = Object.keys({ ...localStorage });
-    if (folderList) {
-      const folderObjects: IFolderhi[] = folderList.map((folderName) => ({
-        name: folderName
-      }));
-      setFolders(folderObjects)
-    }
-  },[folderIsAdded]);
+    fetchFolders()
+  }, [folderIsAdded])
 
   return (
     <>
       <FolderContainer>
         {folders!.map((folder: IFolder, index: number) => (
-          <Folder key={folder.name} title={folder.name}/>
+          <Folder key={index} title={folder.name} id={folder._id}/>
         ))}
         <AddFolder setFolderIsAdded={setFolderIsAdded}/>
       </FolderContainer>

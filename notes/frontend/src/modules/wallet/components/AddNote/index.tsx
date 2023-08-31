@@ -2,15 +2,23 @@ import { useRef, useState, useEffect } from "react";
 import { Add, Title, TitleInput, BodyInput, Form, Button } from "./styles";
 import { Formik, FormikHelpers } from "formik";
 import { useSpring } from "react-spring";
+import { useApi } from "../../hooks/useApi";
 
 interface IProps {
   openAddNote: boolean;
   setOpenAddNote: React.Dispatch<React.SetStateAction<boolean>>;
   folder: string;
-  setNoteIsAdded: React.Dispatch<React.SetStateAction<boolean>>
+  setNoteIsAdded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddNote: React.FC<IProps> = ({ openAddNote, setOpenAddNote, folder, setNoteIsAdded }) => {
+const AddNote: React.FC<IProps> = ({
+  openAddNote,
+  setOpenAddNote,
+  folder,
+  setNoteIsAdded,
+}) => {
+  const { createNote } = useApi();
+
   const newNoteRef = useRef<HTMLDivElement | null>(null);
   const [noteHeight, setNoteHeight] = useState(50);
 
@@ -37,16 +45,12 @@ const AddNote: React.FC<IProps> = ({ openAddNote, setOpenAddNote, folder, setNot
     values: FormValues,
     { setSubmitting, resetForm }: FormikHelpers<FormValues>
   ) => {
-    setTimeout(() => {
+    setTimeout(async () => {
+      const newNoteAdded = { title: values.title, content: values.body };
+      await createNote(folder, newNoteAdded);
+      setNoteIsAdded(true);
       setSubmitting(false);
-      const currentFolder = localStorage.getItem(folder);
-      const notes = currentFolder ? JSON.parse(currentFolder) : [];
-      const newNoteAdded = [values.title, values.body];
-      notes.push(newNoteAdded);
-      const updatedNotes = JSON.stringify(notes);
-      localStorage.setItem(folder, updatedNotes);
       handleToggle();
-      setNoteIsAdded(true)
       resetForm();
     }, 400);
   };
