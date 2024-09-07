@@ -4,9 +4,9 @@ Welcome to Notes - Chapter 2 of the Fullstack Javascript course for SuperHi! Thi
 
 The repository is divided into three branches:
 
-- **Master**: The finished code.
-- **2A starter**: Starter code for the frontend (React + Vite).
-- **2B starter**: Starter code for the backend (Node.js + Express).
+- **master**: The finished code.
+- **2A-starter-files**: Starter code for the frontend (React + Vite).
+- **2B-starter-files**: Starter code for the backend (Node.js + Express).
 
 ## Chapter 2A - Getting Started
 
