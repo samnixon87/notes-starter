@@ -1,7 +1,5 @@
 # notes-starter
 
-# notes-starter
-
 Welcome to Notes - Chapter 2 of the Fullstack Javascript course for SuperHi! This repository is designed to help you understand how to build full stack applications using TypeScript. It covers both the frontend and backend, using React (with Vite) and Node.js (with Express).
 
 The repository is divided into three branches:
